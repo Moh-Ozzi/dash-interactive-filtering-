@@ -56,3 +56,15 @@ def create_map_graph(df, value):
         .update_traces(marker_line_color='lightgrey', hovertemplate='<b>%{hovertext}</b><br><br>value=%{customdata:,.0f}<extra></extra>')
 
     return fig
+
+def graph_highlight(graph, selected_mark):
+    if 'bar' in graph.data[0].type:
+        graph["data"][0]["marker"]["opacity"] = [1 if c == selected_mark else 0.2 for c in graph["data"][0]["x"]]
+        graph["data"][0]["marker"]["line"]['color'] = ['black' if c == selected_mark else 'grey' for c in graph["data"][0]["x"]]
+        graph["data"][0]["marker"]["line"]['width'] = [2 if c == selected_mark else 1 for c in graph["data"][0]["x"]]
+    elif 'choropleth' in graph.data[0].type:
+        graph["data"][0]["marker"]["line"]['color'] = ['black' if c == selected_mark else 'lavender' for c in graph["data"][0]['locations']]
+        graph["data"][0]["marker"]["line"]['width'] = [3 if c == selected_mark else 0.2 for c in graph["data"][0]['locations']]
+        graph['data'][0]['z'] = [max(graph['data'][0]['z'] / 1.5) if c == selected_mark else 0 for c in graph["data"][0]['locations']]
+    return graph
+

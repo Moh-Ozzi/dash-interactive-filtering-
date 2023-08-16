@@ -2,7 +2,7 @@ import dash
 from dash import Dash, html, dcc, Output, Input, callback, ctx, State
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
-from funcs import create_graph_card, create_main_graph, create_map_graph
+from funcs import create_graph_card, create_main_graph, create_map_graph, graph_highlight
 from dash_bootstrap_templates import load_figure_template
 import pandas as pd
 
@@ -159,31 +159,19 @@ def update_graphs(value, clicked_category, clicked_subcategory, clicked_segment,
 
     category_bar_graph = create_main_graph(category_df, x='category', y=value, title='Category', value=value)
     if selected_category is not None and category_filtered:
-        # chnage the opacity, the line color and width of the selected mark to highlight it
-        category_bar_graph["data"][0]["marker"]["opacity"] = [1 if c == selected_category else 0.2 for c in category_bar_graph["data"][0]["x"]]
-        category_bar_graph["data"][0]["marker"]["line"]['color'] = ['black' if c == selected_category else 'grey' for c in category_bar_graph["data"][0]["x"]]
-        category_bar_graph["data"][0]["marker"]["line"]['width'] = [2 if c == selected_category else 1 for c in category_bar_graph["data"][0]["x"]]
+        graph_highlight(category_bar_graph, selected_category)
 
     segment_bar_graph = create_main_graph(segment_df, x='segment', y=value, title='Segment', value=value)
     if selected_segment is not None and segment_filtered:
-        segment_bar_graph["data"][0]["marker"]["opacity"] = [1 if c == selected_segment else 0.2 for c in segment_bar_graph["data"][0]["x"]]
-        segment_bar_graph["data"][0]["marker"]["line"]['color'] = ['black' if c == selected_segment else 'grey' for c in segment_bar_graph["data"][0]["x"]]
-        segment_bar_graph["data"][0]["marker"]["line"]['width'] = [2 if c == selected_segment else 1 for c in segment_bar_graph["data"][0]["x"]]
+        graph_highlight(segment_bar_graph, selected_segment)
 
     sub_category_bar_graph = create_main_graph(sub_cat_df, x='sub_category', y=value, title='Sub-Category', value=value)
     if selected_sub_category is not None and sub_category_filtered:
-        sub_category_bar_graph["data"][0]["marker"]["opacity"] = [1 if c == selected_sub_category else 0.2 for c in sub_category_bar_graph["data"][0]["x"]]
-        sub_category_bar_graph["data"][0]["marker"]["line"]['color'] = ['black' if c == selected_sub_category else 'grey' for c in sub_category_bar_graph["data"][0]["x"]]
-        sub_category_bar_graph["data"][0]["marker"]["line"]['width'] = [2 if c == selected_sub_category else 1 for c in sub_category_bar_graph["data"][0]["x"]]
+        graph_highlight(sub_category_bar_graph, selected_sub_category)
 
     state_map = create_map_graph(state_df, value)
     if selected_state is not None and state_filtered:
-        state_map["data"][0]["marker"]["line"]['color'] = ['black' if c == selected_state else 'lavender' for c in
-                                                              state_map["data"][0]['locations']]
-        state_map["data"][0]["marker"]["line"]['width'] = [3 if c == selected_state else 0.2 for c in
-                                                           state_map["data"][0]['locations']]
-        state_map['data'][0]['z'] = [max(state_map['data'][0]['z']/1.5) if c == selected_state else 0 for c in
-                                                              state_map["data"][0]['locations']]
+        graph_highlight(state_map, selected_state)
 
     app_state['last_category'] = last_category
     app_state['last_segment'] = last_segment
@@ -200,4 +188,4 @@ def update_graphs(value, clicked_category, clicked_subcategory, clicked_segment,
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
