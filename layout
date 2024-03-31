@@ -1,0 +1,20 @@
+app.layout = dbc.Container(
+    dbc.Row([
+        # the dcc.Store holds 'gloabal variables' that will be used for the corss-filtering logic inside the callback
+        dcc.Store(id='store', data=data),
+        dbc.Row(dbc.Col(choices, width=2), style={"height": height}, className='m-1'),
+        dbc.Row([dbc.Col(by_segment, width=5, style={'height': height}), dbc.Col(by_category, width=5, style={'height': height})],
+                className='mt-2',
+                style={"height": '42vh'},
+                justify='around'),
+        dbc.Row([dbc.Col(by_sub_category, width=5, style={'height': height}), dbc.Col(by_state, width=5, style={'height': height})],
+                className='mt-2',
+                style={"height": '42vh'},
+                justify='around'),
+    ],
+ style={'height': '100%'}
+    ),
+
+    fluid=True,
+    style={'background-color': '#F8F9F9'}
+)
